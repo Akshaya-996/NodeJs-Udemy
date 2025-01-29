@@ -1,0 +1,114 @@
+Nodemon is a tool that helps with automatically restarting a Node.js application whenever file changes in the directory are detected. This is particularly useful during development to avoid manually stopping and restarting the server each time you make changes to your code.
+
+Here’s a guide on how to use Nodemon for autostarts in Node.js:
+
+1. Installing Nodemon
+To get started, you need to install Nodemon. You can install it either globally or locally in your project.
+
+Global Installation
+This makes nodemon available as a command in your terminal globally:
+
+npm install -g nodemon
+
+Local Installation
+Alternatively, you can install nodemon as a development dependency in your project:
+
+npm install --save-dev nodemon
+
+After installing locally, you can run it using npx without the need for global installation:
+npx nodemon <your-app.js>
+
+2. Using Nodemon
+
+Basic Usage
+Once Nodemon is installed, you can use it to start your application instead of node.
+
+To run your Node.js application using Nodemon:
+
+nodemon app.js
+This will start your application and automatically restart it whenever you modify the files in your project directory.
+
+Running Nodemon Locally (using npx)
+If you've installed Nodemon locally:
+
+npx nodemon app.js
+Customizing Nodemon Behavior
+Nodemon can be customized using various options to control how and when it restarts the application.
+
+Watching Specific Directories/Files
+By default, Nodemon watches the directory where the script was started. You can specify other directories or files for Nodemon to watch:
+
+nodemon --watch src app.js
+Ignoring Files
+To prevent Nodemon from watching specific files or directories (e.g., node_modules), use the --ignore option:
+
+nodemon --ignore 'node_modules/*' app.js
+Specifying Extensions
+By default, Nodemon watches files with .js extension, but you can specify other file types like .json, .ts, etc.:
+
+
+nodemon --ext js,ts,json app.js
+Restarting Based on Specific Events
+You can specify the types of events that trigger a restart. For example, triggering a restart on changes to .json files:
+
+nodemon --signal SIGUSR2 --watch app.json
+
+3. Using Nodemon with package.json
+Instead of running nodemon directly from the command line, you can configure it in the scripts section of your package.json file, which makes it easier to run.
+
+Example:
+In your package.json file, add a script to run your application using Nodemon:
+
+{
+  "scripts": {
+    "start": "nodemon app.js"
+  }
+}
+You can then run your application with:
+
+npm start
+This command will automatically invoke nodemon to start your app and watch for changes.
+
+4. Advanced Configuration Using nodemon.json
+For more advanced configurations, you can use a nodemon.json file to customize Nodemon's behavior further.
+
+Create a nodemon.json file in your project root:
+
+{
+  "watch": ["src", "views"],
+  "ext": "js,json",
+  "ignore": ["node_modules/*", "public/*"],
+  "exec": "node app.js"
+}
+This configuration tells Nodemon to:
+
+Watch files in the src and views directories.
+Restart on changes to .js or .json files.
+Ignore changes in node_modules and public directories.
+Execute the script node app.js when the application restarts.
+
+5. Benefits of Using Nodemon
+Automatic Restart: Automatically restarts the server when you make changes to the files.
+Customizable: Configure what files and directories to watch and ignore.
+Simplified Development: No need to manually stop and start the server during development.
+
+6. Example Workflow
+Let’s assume you have a simple app.js file, and you want to automatically restart the server every time you change a file in your src directory.
+
+Step 1: Install Nodemon
+
+npm install --save-dev nodemon
+Step 2: Add a Start Script to package.json
+
+{
+  "scripts": {
+    "start": "nodemon src/app.js"
+  }
+}
+Step 3: Run the Application
+
+npm start
+Now, whenever you make changes to any of the files in your src directory, Nodemon will automatically restart your server.
+
+Conclusion
+Using Nodemon is an efficient way to automate the process of restarting your Node.js application during development. Whether you install it globally or locally, it can save you time and ensure that your changes are immediately reflected without manually restarting the server. You can also customize it to meet specific needs, such as watching particular files or ignoring certain directories.

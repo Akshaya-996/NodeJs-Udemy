@@ -1,0 +1,37 @@
+Module Summary
+1. How the web works 
+client => request => Server => Response => client
+Clients/browser sends a request to the server the
+server does some magic, reaches out to a db, works
+with files, sends back a response back to client, 
+then the browser which then can display that.
+
+2. Program Lifecyle and event loop
+Node.js runs non-blocking jS and uses an event loop
+driven code("Event loop") for running your logic.
+A Node program exits as soon as there no more work to do.
+Note: The CreateServer() event never finishes by default.
+
+3. Asynchronous code
+JS code should be non blocking, so we have this callback and
+event driven approach where we are able to register some code to be 
+excuted in the future instead of running right away and blocking the main 
+threat because this has to be avoided under all circumstances and nodejs is 
+built around that concept of avoiding this issue.
+
+4. Request and Responses
+We saw that we have to parse the request data which arrives in chunks and that we can use
+this concepts of streams and buffers and we should avoid sending double Responses
+so this after it sends, you must not send another response and this can happen easily if 
+you forget about that asynchronous nature and that line of code you write might not 
+execute immediately.
+
+5. Node.js and core modules
+Node.js ships with multiple core modules(http, fs, path...)
+core modules can be imported into any file to be used there.
+import via require('module')
+
+6. Node Module system
+import via require('/path-to-file')for customes files or
+require('module') for core and third party modules.
+export via module.exports or just exports (for multiple exports)

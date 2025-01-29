@@ -1,0 +1,71 @@
+The web works as a vast, interconnected system that allows users to access information and services
+through the internet. Here's an overview of how it works:
+
+1. Basics of Web:
+
+Web: A collection of interconnected documents and resources stored on servers, accessed via the internet.
+Internet: The global network of computers and servers that enables data transfer.
+
+2. Key Components:
+1. Users and Devices: Users and devices with the web using devices like computers, smartphones and tablets.
+Browsers like chrome and firefox serve as the interface to access the web.
+2. Web servers: Servers store and deliver the web content.They respond to requests from browser via internet.
+3. Web browsers: Browsers send requests to servers and render the content of users. They interpret web languages (HTML for structure, CSS for styling, Javascript for interactivity)
+4. Protocols: HTTP/HTTPs: Protocols defining how data is transmitted between browsers and servers. 
+HTTP - Hyper text transfer Protocol HTTPs - Hyper text transfer Protocol(encrypted communication).
+5. DNS(Domian name systems) - Translates human-relatable domain names (e.g., www.example.com) into IP addresses (e.g.,192.168.1.1) to locate the server hosting the website.
+
+3. How Website Interaction Happens 
+1. User Action - A user enters a URL (Uniform Resource Locator) in the browser or clicks a link.
+2. DNS Resolution - The browser contacts the DNS server to resolve the domain name into an IP address.
+3. HTTP Request - The browser sends an HTTP/HTTPS request to the server hosting the web resource.
+4. Server Response - The server processes the request and sends back a response (usually HTML, CSS, JavaScript, or other files).
+5. Rendering - The browser renders the response into a user-friendly format (web pages, applications).
+6. Additional Requests - For dynamic content, the browser may make additional requests (e.g., images, videos, or API data).
+
+1. API (Application Programming Interface) - 
+Definition: APIs allow different software systems to communicate and exchange data.
+Example: A weather app fetching data from a weather service API to display local forecasts.
+Usage:
+RESTful APIs: Use HTTP methods (GET, POST, PUT, DELETE) for CRUD operations.
+GraphQL APIs: Allow clients to specify the structure of the data they need.
+Benefits:
+Facilitates integration of third-party services.
+Improves scalability and modularity.
+
+2. CDN (Content Delivery Network)
+Definition: A CDN is a network of distributed servers that deliver web content based on a user's geographic location.
+Example: Videos on YouTube loading quickly due to CDN servers closer to the user.
+Advantages:
+Reduces latency by minimizing the physical distance data travels.
+Balances traffic loads to prevent server overload.
+Improves page load times and enhances user experience.
+
+3. Cookies & Sessions
+Cookies:
+Small text files stored on the user's device by a website.
+Used to remember preferences, track activity, or manage login sessions.
+Sessions:
+Temporary data storage on the server to track user activity during a visit.
+Session data is linked to a unique identifier (Session ID).
+Use Cases:
+Remembering login details.
+Tracking items in a shopping cart.
+Tailoring website content to user preferences.
+
+4. Web Security
+SSL/TLS Encryption:
+Secures data transmission between browser and server using HTTPS.
+Protects sensitive information like passwords and payment details.
+Firewalls:
+Act as a barrier to block unauthorized access while permitting legitimate traffic.
+Authentication:
+Verifies a user's identity (e.g., login credentials).
+Authorization:
+Determines what actions or resources an authenticated user can access.
+Common Practices:
+Implementing CAPTCHA to prevent bots.
+Regular vulnerability assessments.
+
+
+

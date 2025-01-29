@@ -1,0 +1,161 @@
+In Node.js (and JavaScript in general), errors can occur at different stages during the execution of your code. Understanding the different types of errors helps in debugging and handling issues more effectively. Here’s a guide to the different types of errors you might encounter in Node.js:
+
+1. Types of Errors in Node.js
+
+1.1 SyntaxError
+Description: This error occurs when the JavaScript engine encounters invalid syntax in the code. It happens before the code is executed.
+Example:
+
+// Missing closing parenthesis
+const greeting = "Hello, World!";  
+console.log(greeting;
+Error Message:
+
+SyntaxError: Unexpected token ')'
+
+1.2 ReferenceError
+Description: This error occurs when the code references a variable or function that hasn’t been declared.
+console.log(myVar);  // myVar is not declared
+Error Message:
+ReferenceError: myVar is not defined
+
+1.3 TypeError
+Description: A TypeError occurs when a value is not of the expected type. It’s commonly seen when trying to invoke methods or access properties on non-object types (e.g., null or undefined).
+Example:
+
+const num = 42;
+num.toUpperCase();  // Number has no method toUpperCase
+Error Message:
+TypeError: num.toUpperCase is not a function
+
+1.4 RangeError
+Description: This error occurs when a value is not within the expected range. It often happens with functions expecting a certain range of values, like array indices or recursion depth.
+Example:
+
+const arr = [];
+arr.length = -1;  // Invalid array length
+Error Message:
+
+RangeError: Invalid array length
+
+1.5 EvalError
+Description: This is a less common error related to the use of the eval() function. It occurs when there is an issue with the execution of code via eval().
+Example:
+
+eval("console.log('Hello')");
+Error Message:
+
+EvalError: Invalid regular expression
+However, modern JavaScript engines typically do not throw EvalError often because eval() is avoided in most use cases.
+
+1.6 URIError
+Description: This error occurs when there’s an issue with the encodeURI() or decodeURI() functions, usually when a string cannot be properly encoded or decoded.
+Example:
+
+decodeURIComponent('%');  // Invalid URI sequence
+Error Message:
+
+URIError: URI malformed
+
+2. Node.js Specific Errors
+2.1 Error
+Description: The generic Error object is the base class for all errors in JavaScript. If no specific error type is defined, an Error is thrown. It can be customized with a message and stack trace.
+Example:
+
+const error = new Error('Something went wrong');
+throw error;
+Error Message:
+
+Error: Something went wrong
+    at Object.<anonymous> (app.js:2:11)
+    at Module._compile (node:internal/modules/cjs/loader:1218:14)
+
+2.2 AssertionError
+Description: The AssertionError is thrown when an assert statement fails. It is commonly used in testing or verifying conditions.
+Example:
+
+const assert = require('assert');
+assert.strictEqual(1, 2);  // This will throw an AssertionError
+Error Message:
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+1 !== 2
+2.3 RangeError (Specific to Node.js)
+Description: In Node.js, RangeError is often thrown when the argument value passed to a method is out of its valid range. It’s often seen in buffer and stream manipulations.
+Example:
+
+const buffer = Buffer.alloc(256);
+buffer.write('hello', 300);  // Invalid offset
+Error Message:
+
+RangeError: Index out of range
+
+3. Asynchronous Errors
+3.1 UnhandledPromiseRejectionWarning
+Description: This error occurs when a promise is rejected and there’s no catch() handler or try/catch block to handle the rejection.
+Example:
+
+const promise = new Promise((resolve, reject) => {
+  reject('Error occurred');
+});
+// No .catch() handler
+Error Message:
+
+UnhandledPromiseRejectionWarning: Error occurred
+
+3.2 EventEmitter Errors
+Description: Node.js EventEmitters may emit error events. If an error event is emitted and no listener is registered, the process will terminate with an uncaught exception error.
+Example:
+
+const EventEmitter = require('events');
+const emitter = new EventEmitter();
+
+emitter.emit('error', new Error('Something went wrong!'));  // No listener
+Error Message:
+
+Error: Something went wrong!
+    at Object.<anonymous> (app.js:3:17)
+
+4. Handling Errors in Node.js
+4.1 Try-Catch Block (Synchronous Code)
+You can catch errors synchronously using the try...catch block:
+
+try {
+  throw new Error('Something went wrong');
+} catch (error) {
+  console.error('Caught error:', error.message);
+}
+
+4.2 Promise .catch() (Asynchronous Code)
+Handle asynchronous errors with .catch() on promises:
+
+const myPromise = new Promise((resolve, reject) => {
+  reject('Promise failed');
+});
+
+myPromise.catch((error) => {
+  console.error('Caught error:', error);
+});
+
+4.3 Handling Unhandled Promise Rejections
+In newer versions of Node.js, unhandled promise rejections will terminate the process by default. You can handle them by listening for the unhandledRejection event:
+
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+4.4 EventEmitter Error Handling
+For EventEmitter, always handle the error event to prevent the application from crashing:
+
+const emitter = new EventEmitter();
+
+emitter.on('error', (err) => {
+  console.error('Caught EventEmitter error:', err);
+});
+
+emitter.emit('error', new Error('EventEmitter error'));
+
+5. Conclusion
+Errors in Node.js can occur for various reasons, ranging from syntax mistakes to issues with asynchronous operations. 
+By understanding the different types of errors and how to handle them properly, you can build more robust applications. Always handle asynchronous errors using proper .catch() handlers or try...catch blocks and ensure critical errors are logged for debugging purposes.

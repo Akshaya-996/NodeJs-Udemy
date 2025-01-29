@@ -1,0 +1,111 @@
+Redirecting requests involves sending the client to a different URL than the one they initially requested.
+It’s commonly used for URL changes, restructuring a website, or redirecting traffic based on certain conditions (e.g., authentication or user roles). 
+In HTTP, this is achieved using a status code in the 3xx range and the Location header.
+
+1. Types of Redirects
+1.1 Temporary Redirect (302, 307)
+Used when the redirection is temporary, and the original URL may be used again in the future.
+
+302 Found: Historically used for temporary redirects.
+307 Temporary Redirect: HTTP/1.1-compliant version, retaining the HTTP method.
+
+1.2 Permanent Redirect (301, 308)
+Indicates that the resource has permanently moved to a new URL.
+
+301 Moved Permanently: Most common for permanent redirects.
+308 Permanent Redirect: HTTP/1.1-compliant version, retaining the HTTP method.
+
+2. Redirects in Node.js
+2.1 Using the http Module
+With the http module, you manually set the Location header and status code.
+
+Example:
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+  if (req.url === '/') {
+    res.writeHead(302, { Location: '/new-url' });
+    res.end();
+  } else if (req.url === '/new-url') {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('You have been redirected!');
+  } else {
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.end('Not Found');
+  }
+});
+
+server.listen(3000, () => console.log('Server running at http://localhost:3000'));
+
+
+2.2 Using Express
+Express simplifies the process of implementing redirects.
+
+Example:
+
+const express = require('express');
+const app = express();
+
+// Temporary redirect
+app.get('/temp', (req, res) => {
+  res.redirect('/new-temp');
+});
+
+// Permanent redirect
+app.get('/perm', (req, res) => {
+  res.redirect(301, '/new-perm');
+});
+
+app.get('/new-temp', (req, res) => {
+  res.send('Temporary redirect target.');
+});
+
+app.get('/new-perm', (req, res) => {
+  res.send('Permanent redirect target.');
+});
+
+app.listen(3000, () => console.log('Server running at http://localhost:3000'));
+
+3. Advanced Redirect Scenarios
+3.1 Redirect Based on Query Parameters
+
+app.get('/search', (req, res) => {
+  const searchQuery = req.query.q;
+  if (searchQuery) {
+    res.redirect(`/results?q=${searchQuery}`);
+  } else {
+    res.redirect('/error');
+  }
+});
+
+3.2 Role-Based Redirect
+
+app.get('/dashboard', (req, res) => {
+  const userRole = req.query.role;
+
+  if (userRole === 'admin') {
+    res.redirect('/admin-dashboard');
+  } else {
+    res.redirect('/user-dashboard');
+  }
+});
+
+3.3 HTTPS Enforcement
+Redirect all HTTP traffic to HTTPS.
+
+
+app.use((req, res, next) => {
+  if (req.protocol !== 'https') {
+    res.redirect(`https://${req.headers.host}${req.url}`);
+  } else {
+    next();
+  }
+});
+
+4. Best Practices
+Choose the Right Status Code:
+Use 301 for permanent redirects.
+Use 302 or 307 for temporary ones.
+Maintain Query Parameters: Ensure query strings are retained during redirection.
+Secure Redirection: Always redirect HTTP to HTTPS.
+Test Redirects: Verify with tools like Postman, curl, or browser Developer Tools.

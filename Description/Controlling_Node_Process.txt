@@ -1,0 +1,116 @@
+Controlling a Node.js process involves managing its lifecycle, environment, resources, and execution. Node.js provides several built-in methods and properties via the process object to control and interact with the running process.
+1. Starting a Node.js Process
+A Node.js process is initiated using the node command:
+node app.js
+
+2. Stopping a Node.js Process
+Graceful Exit: Use process.exit([code]) to terminate the process.
+console.log('Exiting...');
+process.exit(0); // 0 indicates a successful exit
+Uncaught Errors: To handle uncaught exceptions and exit:
+process.on('uncaughtException', (err) => {
+  console.error('Unhandled Exception:', err);
+  process.exit(1); // Non-zero exit code indicates failure
+});
+Keyboard Interrupt: Press Ctrl+C in the terminal to stop the process.
+
+3. Managing the Process
+3.1 Accessing Environment Variables
+
+Use process.env to read or set environment variables.
+console.log(process.env.NODE_ENV); // Access environment variable
+
+Set environment variables when starting the process:
+NODE_ENV=production node app.js
+
+3.2 Getting Process Information
+Get the current process ID:
+console.log('Process ID:', process.pid);
+Get the current working directory:
+console.log('Current Directory:', process.cwd());
+Get memory usage:
+console.log('Memory Usage:', process.memoryUsage());
+
+4. Handling Signals
+Signals allow you to gracefully handle interruptions like termination (SIGTERM) or interrupts (SIGINT).
+process.on('SIGINT', () => {
+  console.log('Received SIGINT. Exiting...');
+  process.exit(0);
+});
+
+process.on('SIGTERM', () => {
+  console.log('Received SIGTERM. Cleaning up...');
+  process.exit(0);
+});
+
+Send a signal:
+kill -SIGINT <process_id>
+
+5. Standard Input/Output
+Reading Input:
+Use process.stdin to handle user input.
+process.stdin.on('data', (data) => {
+  console.log(`You entered: ${data.toString()}`);
+});
+
+Writing Output:
+Use process.stdout for output.
+process.stdout.write('Hello, World!\n');
+
+6. Debugging and Monitoring
+Use process.argv to access command-line arguments.
+console.log(process.argv); // Prints the arguments passed to the script
+
+Use console methods for debugging:
+console.error('Error Message');
+console.warn('Warning Message');
+
+7. Scheduling Cleanup
+Use process.on('exit') to execute cleanup logic before exiting.
+process.on('exit', (code) => {
+  console.log(`Process exiting with code: ${code}`);
+});
+
+8. Using Child Processes
+Node.js allows you to spawn child processes to run scripts or commands.
+const { exec } = require('child_process');
+
+exec('ls', (error, stdout, stderr) => {
+  if (error) {
+    console.error(`Error: ${error.message}`);
+    return;
+  }
+  console.log(`Output: ${stdout}`);
+});
+
+9. Graceful Shutdown
+Ensure cleanup before terminating the process, such as closing database connections or saving states.
+process.on('SIGTERM', async () => {
+  console.log('Cleaning up resources...');
+  await closeDatabaseConnection();
+  process.exit(0);
+});
+
+10. Preventing Crashes
+Handle uncaught exceptions and unhandled promise rejections:
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
+
+Summary of Common process Methods:
+Method/Property	Description
+process.exit(code)	Exits the process with the specified exit code.
+process.env	Access environment variables.
+process.pid	Gets the process ID.
+process.argv	Command-line arguments.
+process.cwd()	Current working directory.
+process.stdin	Read input from the user.
+process.stdout	Write output to the console.
+process.memoryUsage()	Get memory usage details.
+By effectively controlling the Node.js process, you can improve reliability, monitor performance, and handle runtime challenges gracefully

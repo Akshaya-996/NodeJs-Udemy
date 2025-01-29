@@ -1,0 +1,11 @@
+What's MVC?
+Models views controller
+A Modals are basically objects or is aprt of your code that is responsible for representing your data and allowing you to work with your data,
+so things like saving data, fetching data to or from a file or even if it's just in memory as we're currently doing it.
+
+The Views are repsonsible for what the user sees in the end, they are reponsible for rendering the right content in our HTMl documents and sending that back to the user, so they are decoupled from your application code and are just having some light or minor integrations regarding the data we inject into our templating engine to generate these views
+
+Controllers are now the connection point between the models and your views, the controllers are the thing working with models, saving that data
+or triggering that saved process and so on and also the part where they then pass that data that was fetched to your views, so the controller is the middleman, it contains the in-between logic.
+
+

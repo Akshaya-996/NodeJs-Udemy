@@ -1,0 +1,179 @@
+NPM (Node Package Manager) scripts are custom commands you define in the scripts section of the package.json file. These commands simplify development, testing, building, and deployment processes by automating repetitive tasks.
+
+1. Setting Up NPM Scripts
+Adding a Script
+The scripts section in package.json allows you to define custom commands:
+
+{
+  "name": "my-app",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node app.js",
+    "test": "jest",
+    "build": "webpack --mode production"
+  }
+}
+Running Scripts
+Use the npm run command:
+
+npm run <script-name>
+For the example above:
+
+npm run start
+
+2. Default Script Shortcuts
+Some script names have special meanings and shortcuts:
+
+start:
+
+Run using npm start (no run needed).
+Typically starts the application.
+test:
+
+Run using npm test (no run needed).
+Used for running test suites.
+install:
+
+Run using npm install.
+Automatically executes after dependencies are installed.
+
+3. Chaining Scripts
+NPM allows you to chain multiple scripts using:
+
+&&: Runs the next command only if the previous one succeeds.
+||: Runs the next command only if the previous one fails.
+Example
+
+"scripts": {
+  "clean": "rm -rf dist",
+  "build": "webpack",
+  "start": "npm run clean && npm run build && node app.js"
+}
+Run with:
+
+npm run start
+
+4. Pre and Post Hooks
+You can define scripts to run automatically before or after another script by prefixing them with pre or post.
+
+Example
+"scripts": {
+  "prestart": "echo Preparing to start...",
+  "start": "node app.js",
+  "poststart": "echo App started successfully!"
+}
+Run with:
+
+npm start
+Output:
+
+Preparing to start...
+App started successfully!
+
+5. Passing Arguments to Scripts
+You can pass arguments to scripts using --:
+
+"scripts": {
+  "start": "node app.js"
+}
+Run the script with:
+
+npm run start -- --port=3000
+Inside your script, you can access the argument:
+
+console.log(process.argv);
+
+6. Running Local Binaries
+NPM scripts automatically recognize binaries installed locally via node_modules. This eliminates the need for global installations.
+
+Example
+Install a package locally:
+
+npm install eslint
+Add an NPM script:
+
+"scripts": {
+  "lint": "eslint src/"
+}
+Run with:
+
+npm run lint
+
+7. Using Environment Variables
+Environment variables can be set directly in scripts. Use process.env to access them in your Node.js code.
+
+Cross-Platform Example:
+Use the cross-env package for compatibility:
+
+
+npm install cross-env
+Add an NPM script:
+
+"scripts": {
+  "start": "cross-env NODE_ENV=production node app.js"
+}
+Access NODE_ENV in your code:
+console.log(process.env.NODE_ENV); // Outputs: production
+
+8. Commonly Used Scripts
+Here are some typical NPM scripts used in projects:
+
+Development
+"scripts": {
+  "dev": "nodemon app.js"
+}
+Testing
+"scripts": {
+  "test": "jest"
+}
+Build
+"scripts": {
+  "build": "webpack --mode production"
+}
+Linting
+"scripts": {
+  "lint": "eslint src/"
+}
+9. Running Multiple Scripts
+NPM offers tools to run multiple scripts concurrently or sequentially:
+
+concurrently: Runs multiple commands simultaneously.
+npm install concurrently
+Example:
+
+"scripts": {
+  "dev": "concurrently \"npm run server\" \"npm run client\"",
+  "server": "nodemon server.js",
+  "client": "npm start"
+}
+Run with:
+
+npm run dev
+
+10. Debugging NPM Scripts
+Show All Scripts
+List all available scripts:
+
+npm run
+Debug a Script
+Add DEBUG:
+
+"scripts": {
+  "start": "DEBUG=* node app.js"
+}
+Run with:
+npm run start
+
+11. Best Practices
+Name Scripts Clearly:
+
+Use descriptive names like build, lint, dev.
+Avoid Hardcoding Paths:
+
+Use tools like cross-env for environment variables.
+Centralize Logic:
+
+Keep scripts minimal and offload logic to separate files.
+Document Scripts:
+
+Add comments in package.json or README.

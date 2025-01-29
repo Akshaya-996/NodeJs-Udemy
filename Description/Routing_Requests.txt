@@ -1,0 +1,144 @@
+Routing requests refers to directing incoming HTTP requests to specific code or functionality based on the URL path, HTTP method (e.g., GET, POST), and other parameters. 
+Routing is fundamental in web applications, as it connects client requests to appropriate server responses.
+
+1. Routing Overview
+1.1 Components of a Route
+Path: The URL endpoint (e.g., /users, /products/:id).
+HTTP Method: The request type (e.g., GET, POST, PUT, DELETE).
+Handler: The function that processes the request and sends a response.
+1.2 Example
+A route might look like this:
+app.get('/users', (req, res) => {
+  res.send('List of users');
+});
+
+2. Routing in Node.js
+2.1 Using the http Module
+The http module requires you to manually handle routing.
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+  if (req.method === 'GET' && req.url === '/users') {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('List of users');
+  } else if (req.method === 'POST' && req.url === '/users') {
+    res.writeHead(201, { 'Content-Type': 'text/plain' });
+    res.end('User created');
+  } else {
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.end('Not Found');
+  }
+});
+
+server.listen(3000, () => {
+  console.log('Server is running on http://localhost:3000');
+});
+
+2.2 Limitations of Manual Routing
+Repetitive code.
+Hard to scale as routes increase.
+
+3. Routing in Express
+Express simplifies routing with its robust API.
+
+3.1 Basic Routing
+const express = require('express');
+const app = express();
+
+app.get('/', (req, res) => {
+  res.send('Welcome to the homepage!');
+});
+
+app.get('/users', (req, res) => {
+  res.send('List of users');
+});
+
+app.listen(3000, () => console.log('Server running on http://localhost:3000'));
+
+3.2 Route Parameters
+Capture dynamic values in the URL.
+Example:
+app.get('/users/:id', (req, res) => {
+  const userId = req.params.id; // Access the dynamic part of the URL
+  res.send(`User ID: ${userId}`);
+});
+
+3.3 Query Parameters
+Access query strings from the URL.
+app.get('/search', (req, res) => {
+  const query = req.query.q; // Access ?q=keyword
+  res.send(`Search results for: ${query}`);
+});
+
+3.4 Handling Different HTTP Methods
+app.route('/users')
+  .get((req, res) => res.send('Get users'))
+  .post((req, res) => res.send('Create user'))
+  .put((req, res) => res.send('Update user'))
+  .delete((req, res) => res.send('Delete user'));
+
+4. Middleware in Routing
+Middleware processes requests before they reach the route handler.
+Example: Logging Middleware
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next(); // Pass control to the next handler
+});
+
+app.get('/', (req, res) => {
+  res.send('Hello, Middleware!');
+});
+5. Nested and Modular Routing
+5.1 Nested Routes
+Use express.Router() for organizing routes.
+
+Example:
+const express = require('express');
+const app = express();
+const router = express.Router();
+
+router.get('/', (req, res) => res.send('User list'));
+router.get('/:id', (req, res) => res.send(`User ID: ${req.params.id}`));
+
+app.use('/users', router);
+
+app.listen(3000, () => console.log('Server running on http://localhost:3000'));
+
+6. Error Handling in Routes
+Handle errors gracefully with a middleware.
+
+app.use((req, res, next) => {
+  res.status(404).send('Route not found');
+});
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Internal Server Error');
+});
+
+7. Advanced Routing Techniques
+7.1 Route Groups
+Use shared base paths.
+app.use('/api', (req, res, next) => {
+  console.log('API Request');
+  next();
+});
+
+app.get('/api/users', (req, res) => res.send('Users API'));
+
+7.2 Conditional Routing
+Dynamic decisions for routing.
+app.get('/dashboard', (req, res) => {
+  if (req.query.admin === 'true') {
+    res.send('Admin Dashboard');
+  } else {
+    res.send('User Dashboard');
+  }
+});
+
+8. Routing Best Practices
+Organize Routes: Use modular routes for better maintainability.
+Use Middleware: Apply middleware for tasks like authentication and logging.
+Validate Input: Ensure route parameters and queries are sanitized.
+Handle Errors: Always provide meaningful error responses.
+Document Routes: Use tools like Swagger to document APIs.

@@ -1,0 +1,134 @@
+Parsing request bodies in Node.js refers to extracting and processing data sent by the client in the HTTP request body. 
+Common scenarios include form submissions, JSON data from APIs, or file uploads. 
+The way request body parsing is handled depends on the content type (e.g., application/json, application/x-www-form-urlencoded, multipart/form-data).
+
+1. Request Body Content Types
+application/json: JSON data, common in APIs.
+application/x-www-form-urlencoded: Form data, encoded as key-value pairs.
+multipart/form-data: Used for file uploads and form submissions.
+text/plain: Plain text data.
+
+2. Parsing Request Bodies with the http Module
+The http module requires manual parsing of the request body. Here's an example for JSON data:
+Example: Parsing JSON
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+  if (req.method === 'POST' && req.headers['content-type'] === 'application/json') {
+    let body = '';
+
+    // Accumulate data chunks
+    req.on('data', (chunk) => {
+      body += chunk.toString();
+    });
+
+    // Parse and respond
+    req.on('end', () => {
+      const parsedBody = JSON.parse(body);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: 'Data received', data: parsedBody }));
+    });
+  } else {
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.end('Not Found');
+  }
+});
+
+server.listen(3000, () => console.log('Server running on http://localhost:3000'));
+
+3. Parsing Request Bodies in Express
+Express simplifies request body parsing by using middleware such as express.json() and express.urlencoded().
+3.1 Parsing JSON Data
+const express = require('express');
+const app = express();
+
+// Middleware for parsing JSON
+app.use(express.json());
+
+app.post('/data', (req, res) => {
+  res.send({
+    message: 'JSON data received',
+    data: req.body,
+  });
+});
+
+app.listen(3000, () => console.log('Server running on http://localhost:3000'));
+
+3.2 Parsing Form-Encoded Data
+
+app.use(express.urlencoded({ extended: true }));
+
+app.post('/form', (req, res) => {
+  res.send({
+    message: 'Form data received',
+    data: req.body,
+  });
+});
+
+4. Handling Multipart Form Data (File Uploads)
+To handle file uploads, you need additional middleware like multer.
+
+Setup with multer
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
+app.post('/upload', upload.single('file'), (req, res) => {
+  res.send({
+    message: 'File uploaded',
+    file: req.file, // File information
+  });
+});
+
+upload.single('file'): Handles a single file upload.
+upload.array('files', maxCount): Handles multiple file uploads.
+
+5. Parsing Raw Data
+For cases where data is not encoded as JSON or form data, you can parse raw data manually or use a middleware like body-parser.
+
+Example: Parsing Plain Text
+app.use(express.text());
+
+app.post('/text', (req, res) => {
+  res.send({
+    message: 'Plain text received',
+    data: req.body,
+  });
+});
+
+6. Using Third-Party Libraries
+For custom parsing or advanced use cases, libraries like body-parser can be used. While not necessary in modern Express, it’s still available.
+
+Setup with body-parser
+
+const bodyParser = require('body-parser');
+
+// Middleware for JSON
+app.use(bodyParser.json());
+
+// Middleware for form data
+app.use(bodyParser.urlencoded({ extended: true }));
+
+7. Error Handling for Parsing
+Always handle errors during body parsing to avoid crashes.
+app.use(express.json());
+
+app.post('/data', (req, res, next) => {
+  try {
+    const data = req.body;
+    if (!data.name) {
+      throw new Error('Name is required');
+    }
+    res.send({ message: 'Data processed', data });
+  } catch (error) {
+    res.status(400).send({ error: error.message });
+  }
+});
+
+8. Best Practices
+Use Middleware: Prefer express.json() or similar tools for simplicity.
+Set Content-Type: Ensure the client sets the correct Content-Type header.
+Limit Payload Size: Prevent abuse by limiting request body sizes.
+
+app.use(express.json({ limit: '10mb' }));
+Validate Input: Always validate and sanitize incoming data to prevent security risks.
+
